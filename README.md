@@ -1,8 +1,30 @@
-# Welcome to your Expo app 👋
+# Fermentation Station 🧫
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A mobile app for tracking, managing, and monitoring your fermentation projects.
 
-## Get started
+## Overview
+
+Fermentation Station is a comprehensive tool for home fermenters to track all their projects in one place. Whether you're brewing kombucha, fermenting kimchi, or nurturing sourdough, this app helps you monitor progress, set reminders, and keep detailed records of your fermentation journey.
+
+## Features
+
+- **Track multiple fermentation projects** with different statuses (planned, unstable, stable, expired, bad)
+- **Log ingredients and process details** for each ferment
+- **Set and manage reminders** for feeding, burping, or other maintenance tasks
+- **Monitor key metrics** like pH and temperature over time
+- **Filter ferments** by status to easily find what needs attention
+- **Dark and light mode support** for comfortable viewing in any environment
+
+## Technical Details
+
+This is a cross-platform mobile application built with:
+
+- [React Native](https://reactnative.dev/) and [Expo](https://expo.dev)
+- [Expo Router](https://docs.expo.dev/router/introduction/) for file-based navigation
+- [React Context API](https://reactjs.org/docs/context.html) for state management
+- Modular component architecture for maintainability and reusability
+
+## Getting Started
 
 1. Install dependencies
 
@@ -13,38 +35,31 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 2. Start the app
 
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+In the output, you'll find options to open the app in a:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
 - [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
 - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- [Expo Go](https://expo.dev/go) app on your physical device
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Project Structure
 
-## Get a fresh project
+- `app/` - Main application code using file-based routing
+- `components/` - Reusable UI components
+- `hooks/` - Custom React hooks including data management
+- `constants/` - Type definitions and application constants
+- `assets/` - Static assets like images and fonts
 
-When you're ready, run:
+## Future Enhancements
 
-```bash
-npm run reset-project
-```
+- Data persistence using AsyncStorage or a local database
+- Image capture for visual tracking of fermentation progress
+- Data visualization for temperature and pH trends
+- Sharing and exporting recipes
+- Community features for comparing notes with other fermenters
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## License
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
