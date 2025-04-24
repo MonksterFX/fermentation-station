@@ -1,10 +1,9 @@
-import { Ferment, FermentStatus, FermentType } from './Ferment';
+import { Ferment, FermentStatus } from './Ferment';
 
 export const mockFerments: Ferment[] = [
   {
     id: '1',
     name: 'Summer Kombucha',
-    type: FermentType.KOMBUCHA,
     startDate: new Date('2023-06-15'),
     ingredients: ['Black tea', 'Sugar', 'SCOBY'],
     notes: 'First fermentation with strawberry flavor',
@@ -24,7 +23,6 @@ export const mockFerments: Ferment[] = [
   {
     id: '2',
     name: 'Classic Sauerkraut',
-    type: FermentType.SAUERKRAUT,
     startDate: new Date('2023-05-20'),
     endDate: new Date('2023-06-10'),
     ingredients: ['Cabbage', 'Salt'],
@@ -37,7 +35,6 @@ export const mockFerments: Ferment[] = [
   {
     id: '3',
     name: 'Spicy Kimchi',
-    type: FermentType.KIMCHI,
     startDate: new Date('2023-06-01'),
     ingredients: ['Napa cabbage', 'Korean chili flakes', 'Garlic', 'Ginger'],
     notes: 'Extra spicy batch',
@@ -56,7 +53,6 @@ export const mockFerments: Ferment[] = [
   {
     id: '4',
     name: 'Milk Kefir',
-    type: FermentType.KEFIR,
     startDate: new Date('2023-04-10'),
     endDate: new Date('2023-04-12'),
     ingredients: ['Milk', 'Kefir grains'],
@@ -70,7 +66,6 @@ export const mockFerments: Ferment[] = [
   {
     id: '5',
     name: 'Sourdough Pizza Crust',
-    type: FermentType.SOURDOUGH,
     startDate: new Date(Date.now() + 604800000), // Next week
     ingredients: ['Flour', 'Water', 'Salt', 'Sourdough starter'],
     notes: 'For weekend pizza night',
@@ -88,7 +83,6 @@ export const mockFerments: Ferment[] = [
   {
     id: '6',
     name: 'Pickle Experiment',
-    type: FermentType.PICKLES,
     startDate: new Date('2023-05-01'),
     endDate: new Date('2023-06-01'),
     ingredients: ['Cucumbers', 'Salt', 'Dill', 'Garlic'],

@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
 import { useFerments } from '@/hooks/useFerments';
-import { FermentStatus, FermentType } from '@/constants/Ferment';
+import { FermentStatus } from '@/constants/Ferment';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
@@ -146,13 +146,6 @@ export default function FermentsScreen() {
                   <IconSymbol name="calendar" size={16} color={Colors[colorScheme ?? 'light'].text} />
                   <Text style={[styles.detailText, { color: Colors[colorScheme ?? 'light'].text }]}>
                     Started: {formatDate(item.startDate)}
-                  </Text>
-                </View>
-                
-                <View style={styles.detailRow}>
-                  <IconSymbol name="tag.fill" size={16} color={Colors[colorScheme ?? 'light'].text} />
-                  <Text style={[styles.detailText, { color: Colors[colorScheme ?? 'light'].text }]}>
-                    {item.type}
                   </Text>
                 </View>
                 

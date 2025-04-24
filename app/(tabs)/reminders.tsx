@@ -20,7 +20,6 @@ export default function RemindersScreen() {
       ...reminder,
       fermentId: ferment.id,
       fermentName: ferment.name,
-      fermentType: ferment.type,
     }));
     return [...acc, ...fermentReminders];
   }, [] as Array<{
@@ -31,7 +30,6 @@ export default function RemindersScreen() {
     completed: boolean;
     fermentId: string;
     fermentName: string;
-    fermentType: string;
   }>);
 
   // Sort reminders by date (upcoming first)
@@ -173,7 +171,7 @@ export default function RemindersScreen() {
                       { color: item.completed ? Colors[colorScheme ?? 'light'].icon : Colors[colorScheme ?? 'light'].tint },
                     ]}
                   >
-                    {item.fermentName} ({item.fermentType})
+                    {item.fermentName}
                   </Text>
                 </View>
               </View>

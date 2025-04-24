@@ -1,7 +1,6 @@
 export interface Ferment {
   id: string;
   name: string;
-  type: FermentType;
   startDate: Date;
   endDate?: Date;
   ingredients: string[];
@@ -11,18 +10,6 @@ export interface Ferment {
   ph?: number;
   images: string[];
   reminders: Reminder[];
-}
-
-export enum FermentType {
-  KOMBUCHA = 'Kombucha',
-  KIMCHI = 'Kimchi',
-  SAUERKRAUT = 'Sauerkraut',
-  KEFIR = 'Kefir',
-  PICKLES = 'Pickles',
-  SOURDOUGH = 'Sourdough',
-  YOGURT = 'Yogurt',
-  MISO = 'Miso',
-  OTHER = 'Other'
 }
 
 export enum FermentStatus {

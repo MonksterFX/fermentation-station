@@ -240,9 +240,6 @@ export default function HomeScreen() {
                       <Text style={[styles.fermentName, { color: Colors[colorScheme ?? 'light'].text }]}>
                         {ferment.name}
                       </Text>
-                      <Text style={[styles.fermentType, { color: Colors[colorScheme ?? 'light'].icon }]}>
-                        {ferment.type}
-                      </Text>
                     </View>
                     <View style={[
                       styles.statusBadge,
@@ -409,9 +406,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 2,
-  },
-  fermentType: {
-    fontSize: 13,
   },
   statusBadge: {
     paddingHorizontal: 8,

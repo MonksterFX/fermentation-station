@@ -12,12 +12,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useFerments } from '@/hooks/useFerments';
-import { FermentStatus, FermentType } from '@/constants/Ferment';
+import { FermentStatus } from '@/constants/Ferment';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { FormInput } from '@/components/ui/FormInput';
-import { FormPicker } from '@/components/ui/FormPicker';
 import { DatePickerField } from '@/components/ui/DatePickerField';
 import { IngredientInput } from '@/components/ui/IngredientInput';
 import { SubmitButton } from '@/components/ui/SubmitButton';
@@ -26,7 +25,6 @@ export default function AddFermentScreen() {
   const { addFerment } = useFerments();
   const colorScheme = useColorScheme();
   const [name, setName] = useState('');
-  const [type, setType] = useState(FermentType.KOMBUCHA);
   const [startDate, setStartDate] = useState(new Date());
   const [ingredients, setIngredients] = useState<string[]>(['']);
   const [notes, setNotes] = useState('');
@@ -61,7 +59,6 @@ export default function AddFermentScreen() {
 
     const newFerment = {
       name,
-      type,
       startDate,
       ingredients: filteredIngredients,
       notes,
@@ -75,11 +72,6 @@ export default function AddFermentScreen() {
     addFerment(newFerment);
     router.push('/ferments');
   };
-
-  const fermentTypeItems = Object.values(FermentType).map(type => ({
-    label: type,
-    value: type,
-  }));
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -104,13 +96,6 @@ export default function AddFermentScreen() {
               value={name}
               onChangeText={setName}
               placeholder="Enter ferment name"
-            />
-
-            <FormPicker
-              label="Type"
-              selectedValue={type}
-              onValueChange={(value) => setType(value as FermentType)}
-              items={fermentTypeItems}
             />
 
             <DatePickerField

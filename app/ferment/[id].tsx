@@ -5,7 +5,7 @@ import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useFerments } from '@/hooks/useFerments';
 import { useReminderScheduling } from '@/hooks/useReminderScheduling';
-import { FermentStatus, FermentType, Ferment, Reminder } from '@/constants/Ferment';
+import { FermentStatus, Ferment, Reminder } from '@/constants/Ferment';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
@@ -178,11 +178,6 @@ export default function FermentDetailScreen() {
         {/* Details Section */}
         <View style={[styles.section, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}>
           <Text style={[styles.sectionTitle, { color: Colors[colorScheme ?? 'light'].text }]}>Details</Text>
-          
-          <View style={styles.detailRow}>
-            <Text style={[styles.detailLabel, { color: Colors[colorScheme ?? 'light'].text }]}>Type:</Text>
-            <Text style={[styles.detailValue, { color: Colors[colorScheme ?? 'light'].text }]}>{ferment.type}</Text>
-          </View>
           
           <View style={styles.detailRow}>
             <Text style={[styles.detailLabel, { color: Colors[colorScheme ?? 'light'].text }]}>Started:</Text>

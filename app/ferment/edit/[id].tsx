@@ -5,7 +5,7 @@ import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 
 import { useFerments } from '@/hooks/useFerments';
-import { FermentStatus, FermentType } from '@/constants/Ferment';
+import { FermentStatus } from '@/constants/Ferment';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { FormInput } from '@/components/ui/FormInput';
@@ -26,7 +26,6 @@ export default function EditFermentScreen() {
   });
 
   const [name, setName] = useState('');
-  const [type, setType] = useState(FermentType.KOMBUCHA);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [ingredients, setIngredients] = useState<string[]>(['']);
@@ -39,7 +38,6 @@ export default function EditFermentScreen() {
   useEffect(() => {
     if (ferment) {
       setName(ferment.name);
-      setType(ferment.type);
       setStartDate(ferment.startDate);
       setEndDate(ferment.endDate || null);
       setIngredients(ferment.ingredients.length > 0 ? ferment.ingredients : ['']);
@@ -96,7 +94,6 @@ export default function EditFermentScreen() {
 
     const updatedFerment = {
       name,
-      type,
       startDate,
       endDate: endDate || undefined,
       ingredients: filteredIngredients,
@@ -109,11 +106,6 @@ export default function EditFermentScreen() {
     updateFerment(id || '', updatedFerment);
     router.back();
   };
-
-  const fermentTypeItems = Object.values(FermentType).map(type => ({
-    label: type,
-    value: type,
-  }));
 
   const fermentStatusItems = Object.values(FermentStatus).map(status => ({
     label: status,
@@ -137,13 +129,6 @@ export default function EditFermentScreen() {
             value={name}
             onChangeText={setName}
             placeholder="Enter ferment name"
-          />
-
-          <FormPicker
-            label="Type"
-            selectedValue={type}
-            onValueChange={setType}
-            items={fermentTypeItems}
           />
 
           <FormPicker
