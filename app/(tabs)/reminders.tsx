@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useFerments } from '@/hooks/useFerments';
 import { Colors } from '@/constants/Colors';
@@ -63,7 +64,7 @@ export default function RemindersScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <Stack.Screen options={{ headerShown: false }} />
       
       <View style={styles.header}>
@@ -167,7 +168,7 @@ export default function RemindersScreen() {
           )}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

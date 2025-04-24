@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
 import { useFerments } from '@/hooks/useFerments';
@@ -104,181 +105,183 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Stack.Screen options={{ headerShown: false }} />
-      
-      <View style={styles.header}>
-        <Text style={[styles.title, { color: Colors[colorScheme ?? 'light'].text }]}>
-          Fermentation Station
-        </Text>
-      </View>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
+      <ScrollView>
+        <Stack.Screen options={{ headerShown: false }} />
+        
+        <View style={styles.header}>
+          <Text style={[styles.title, { color: Colors[colorScheme ?? 'light'].text }]}>
+            Fermentation Station
+          </Text>
+        </View>
 
-      <View style={styles.statsContainer}>
-        <View
-          style={[
-            styles.statsCard,
-            { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }
-          ]}>
-          <View style={styles.statItem}>
-            <View style={[styles.statIconContainer, { backgroundColor: '#FFF3E0' }]}>
-              <IconSymbol name="flask.fill" size={20} color="#FF9800" />
+        <View style={styles.statsContainer}>
+          <View
+            style={[
+              styles.statsCard,
+              { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }
+            ]}>
+            <View style={styles.statItem}>
+              <View style={[styles.statIconContainer, { backgroundColor: '#FFF3E0' }]}>
+                <IconSymbol name="flask.fill" size={20} color="#FF9800" />
+              </View>
+              <View>
+                <Text style={[styles.statValue, { color: Colors[colorScheme ?? 'light'].text }]}>
+                  {stats.active}
+                </Text>
+                <Text style={[styles.statLabel, { color: Colors[colorScheme ?? 'light'].icon }]}>
+                  Active
+                </Text>
+              </View>
             </View>
-            <View>
-              <Text style={[styles.statValue, { color: Colors[colorScheme ?? 'light'].text }]}>
-                {stats.active}
-              </Text>
-              <Text style={[styles.statLabel, { color: Colors[colorScheme ?? 'light'].icon }]}>
-                Active
-              </Text>
-            </View>
-          </View>
 
-          <View style={styles.statItem}>
-            <View style={[styles.statIconContainer, { backgroundColor: '#F3E5F5' }]}>
-              <IconSymbol name="calendar.badge.clock" size={20} color="#9C27B0" />
+            <View style={styles.statItem}>
+              <View style={[styles.statIconContainer, { backgroundColor: '#F3E5F5' }]}>
+                <IconSymbol name="calendar.badge.clock" size={20} color="#9C27B0" />
+              </View>
+              <View>
+                <Text style={[styles.statValue, { color: Colors[colorScheme ?? 'light'].text }]}>
+                  {stats.planned}
+                </Text>
+                <Text style={[styles.statLabel, { color: Colors[colorScheme ?? 'light'].icon }]}>
+                  Planned
+                </Text>
+              </View>
             </View>
-            <View>
-              <Text style={[styles.statValue, { color: Colors[colorScheme ?? 'light'].text }]}>
-                {stats.planned}
-              </Text>
-              <Text style={[styles.statLabel, { color: Colors[colorScheme ?? 'light'].icon }]}>
-                Planned
-              </Text>
-            </View>
-          </View>
 
-          <View style={styles.statItem}>
-            <View style={[styles.statIconContainer, { backgroundColor: '#FFF8E1' }]}>
-              <IconSymbol name="bell.fill" size={20} color="#FFB300" />
-            </View>
-            <View>
-              <Text style={[styles.statValue, { color: Colors[colorScheme ?? 'light'].text }]}>
-                {stats.reminders}
-              </Text>
-              <Text style={[styles.statLabel, { color: Colors[colorScheme ?? 'light'].icon }]}>
-                Reminders
-              </Text>
+            <View style={styles.statItem}>
+              <View style={[styles.statIconContainer, { backgroundColor: '#FFF8E1' }]}>
+                <IconSymbol name="bell.fill" size={20} color="#FFB300" />
+              </View>
+              <View>
+                <Text style={[styles.statValue, { color: Colors[colorScheme ?? 'light'].text }]}>
+                  {stats.reminders}
+                </Text>
+                <Text style={[styles.statLabel, { color: Colors[colorScheme ?? 'light'].icon }]}>
+                  Reminders
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
 
-      <View style={styles.sectionHeader}>
-        <Text style={[styles.sectionTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
-          Quick Actions
-        </Text>
-      </View>
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
+            Quick Actions
+          </Text>
+        </View>
 
-      <ActionButtons />
+        <ActionButtons />
 
-      {upcomingReminders.length > 0 && (
-        <>
-          <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
-              Upcoming Reminders
-            </Text>
-            <TouchableOpacity onPress={() => router.push('/(tabs)/reminders')}>
-              <Text style={[styles.seeAllText, { color: Colors[colorScheme ?? 'light'].tint }]}>
-                See All
+        {upcomingReminders.length > 0 && (
+          <>
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.sectionTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
+                Upcoming Reminders
               </Text>
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity onPress={() => router.push('/(tabs)/reminders')}>
+                <Text style={[styles.seeAllText, { color: Colors[colorScheme ?? 'light'].tint }]}>
+                  See All
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-          <View style={styles.remindersList}>
-            {upcomingReminders.map((reminder) => (
-              <View 
-                key={reminder.id}
-                style={[
-                  styles.reminderCard,
-                  { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }
-                ]}>
-                <View style={styles.reminderContent}>
-                  <View style={styles.reminderIcon}>
-                    <IconSymbol name="bell.fill" size={16} color="#FFB300" />
-                  </View>
-                  <View style={styles.reminderDetails}>
-                    <Text style={[styles.reminderText, { color: Colors[colorScheme ?? 'light'].text }]}>
-                      {reminder.text}
-                    </Text>
-                    <Text style={[styles.reminderSubtext, { color: Colors[colorScheme ?? 'light'].icon }]}>
-                      {reminder.fermentName} • {formatDate(reminder.date)}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            ))}
-          </View>
-        </>
-      )}
-
-      {recentFerments.length > 0 && (
-        <>
-          <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
-              Recent Ferments
-            </Text>
-            <TouchableOpacity onPress={() => router.push('/(tabs)/ferments')}>
-              <Text style={[styles.seeAllText, { color: Colors[colorScheme ?? 'light'].tint }]}>
-                See All
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.fermentsList}>
-            {recentFerments.map((ferment) => (
-              <TouchableOpacity
-                key={ferment.id}
-                style={[
-                  styles.fermentCard,
-                  { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }
-                ]}
-                onPress={() => router.push('/(tabs)/ferments')}>
-                <View style={styles.fermentContent}>
-                  <View style={styles.fermentInfo}>
-                    <Text style={[styles.fermentName, { color: Colors[colorScheme ?? 'light'].text }]}>
-                      {ferment.name}
-                    </Text>
-                    <Text style={[styles.fermentType, { color: Colors[colorScheme ?? 'light'].icon }]}>
-                      {ferment.type}
-                    </Text>
-                  </View>
-                  <View style={[
-                    styles.statusBadge,
-                    { backgroundColor: getStatusColor(ferment.status) }
+            <View style={styles.remindersList}>
+              {upcomingReminders.map((reminder) => (
+                <View 
+                  key={reminder.id}
+                  style={[
+                    styles.reminderCard,
+                    { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }
                   ]}>
-                    <IconSymbol 
-                      name={getStatusIcon(ferment.status)} 
-                      size={12} 
-                      color="white" 
-                      style={styles.statusIcon} 
-                    />
-                    <Text style={styles.statusText}>{ferment.status}</Text>
-                  </View>
-                </View>
-                <View style={styles.fermentMeta}>
-                  <View style={styles.metaItem}>
-                    <IconSymbol name="calendar" size={14} color={Colors[colorScheme ?? 'light'].icon} />
-                    <Text style={[styles.metaText, { color: Colors[colorScheme ?? 'light'].icon }]}>
-                      Started: {formatDate(ferment.startDate)}
-                    </Text>
-                  </View>
-                  {ferment.ingredients.length > 0 && (
-                    <View style={styles.metaItem}>
-                      <IconSymbol name="list.bullet" size={14} color={Colors[colorScheme ?? 'light'].icon} />
-                      <Text style={[styles.metaText, { color: Colors[colorScheme ?? 'light'].icon }]}>
-                        {ferment.ingredients.length} ingredients
+                  <View style={styles.reminderContent}>
+                    <View style={styles.reminderIcon}>
+                      <IconSymbol name="bell.fill" size={16} color="#FFB300" />
+                    </View>
+                    <View style={styles.reminderDetails}>
+                      <Text style={[styles.reminderText, { color: Colors[colorScheme ?? 'light'].text }]}>
+                        {reminder.text}
+                      </Text>
+                      <Text style={[styles.reminderSubtext, { color: Colors[colorScheme ?? 'light'].icon }]}>
+                        {reminder.fermentName} • {formatDate(reminder.date)}
                       </Text>
                     </View>
-                  )}
+                  </View>
                 </View>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </>
-      )}
+              ))}
+            </View>
+          </>
+        )}
 
-      <View style={styles.footer} />
-    </ScrollView>
+        {recentFerments.length > 0 && (
+          <>
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.sectionTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
+                Recent Ferments
+              </Text>
+              <TouchableOpacity onPress={() => router.push('/(tabs)/ferments')}>
+                <Text style={[styles.seeAllText, { color: Colors[colorScheme ?? 'light'].tint }]}>
+                  See All
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.fermentsList}>
+              {recentFerments.map((ferment) => (
+                <TouchableOpacity
+                  key={ferment.id}
+                  style={[
+                    styles.fermentCard,
+                    { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }
+                  ]}
+                  onPress={() => router.push('/(tabs)/ferments')}>
+                  <View style={styles.fermentContent}>
+                    <View style={styles.fermentInfo}>
+                      <Text style={[styles.fermentName, { color: Colors[colorScheme ?? 'light'].text }]}>
+                        {ferment.name}
+                      </Text>
+                      <Text style={[styles.fermentType, { color: Colors[colorScheme ?? 'light'].icon }]}>
+                        {ferment.type}
+                      </Text>
+                    </View>
+                    <View style={[
+                      styles.statusBadge,
+                      { backgroundColor: getStatusColor(ferment.status) }
+                    ]}>
+                      <IconSymbol 
+                        name={getStatusIcon(ferment.status)} 
+                        size={12} 
+                        color="white" 
+                        style={styles.statusIcon} 
+                      />
+                      <Text style={styles.statusText}>{ferment.status}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.fermentMeta}>
+                    <View style={styles.metaItem}>
+                      <IconSymbol name="calendar" size={14} color={Colors[colorScheme ?? 'light'].icon} />
+                      <Text style={[styles.metaText, { color: Colors[colorScheme ?? 'light'].icon }]}>
+                        Started: {formatDate(ferment.startDate)}
+                      </Text>
+                    </View>
+                    {ferment.ingredients.length > 0 && (
+                      <View style={styles.metaItem}>
+                        <IconSymbol name="list.bullet" size={14} color={Colors[colorScheme ?? 'light'].icon} />
+                        <Text style={[styles.metaText, { color: Colors[colorScheme ?? 'light'].icon }]}>
+                          {ferment.ingredients.length} ingredients
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </>
+        )}
+
+        <View style={styles.footer} />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

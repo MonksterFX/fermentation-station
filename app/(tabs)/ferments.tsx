@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, FlatList, View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
 import { useFerments } from '@/hooks/useFerments';
@@ -61,7 +62,7 @@ export default function FermentsScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <Stack.Screen options={{ headerShown: false }} />
       
       <View style={styles.header}>
@@ -123,7 +124,7 @@ export default function FermentsScreen() {
               styles.card,
               { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }
             ]}
-            onPress={() => router.push(`/(tabs)/ferments`)}>
+            onPress={() => router.push(`/ferment/${item.id}`)}>
             <View style={styles.cardContent}>
               <View style={styles.cardHeader}>
                 <Text style={[styles.cardTitle, { color: Colors[colorScheme ?? 'light'].text }]}>
@@ -177,7 +178,7 @@ export default function FermentsScreen() {
           </TouchableOpacity>
         )}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

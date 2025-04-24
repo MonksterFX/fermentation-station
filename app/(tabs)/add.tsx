@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useFerments } from '@/hooks/useFerments';
 import { FermentStatus, FermentType } from '@/constants/Ferment';
@@ -81,82 +82,84 @@ export default function AddFermentScreen() {
   }));
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <ScrollView style={styles.container}>
-        <Stack.Screen options={{ headerShown: false }} />
-        
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <IconSymbol name="chevron.left" size={24} color={Colors[colorScheme ?? 'light'].text} />
-          </TouchableOpacity>
-          <Text style={[styles.title, { color: Colors[colorScheme ?? 'light'].text }]}>
-            Add New Ferment
-          </Text>
-        </View>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
+      <Stack.Screen options={{ title: 'Add Ferment' }} />
+      
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <ScrollView style={styles.form} showsVerticalScrollIndicator={false}>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+              <IconSymbol name="chevron.left" size={24} color={Colors[colorScheme ?? 'light'].text} />
+            </TouchableOpacity>
+            <Text style={[styles.title, { color: Colors[colorScheme ?? 'light'].text }]}>
+              Add New Ferment
+            </Text>
+          </View>
 
-        <View style={styles.form}>
-          <FormInput
-            label="Name"
-            value={name}
-            onChangeText={setName}
-            placeholder="Enter ferment name"
-          />
+          <View style={styles.form}>
+            <FormInput
+              label="Name"
+              value={name}
+              onChangeText={setName}
+              placeholder="Enter ferment name"
+            />
 
-          <FormPicker
-            label="Type"
-            selectedValue={type}
-            onValueChange={(value) => setType(value as FermentType)}
-            items={fermentTypeItems}
-          />
+            <FormPicker
+              label="Type"
+              selectedValue={type}
+              onValueChange={(value) => setType(value as FermentType)}
+              items={fermentTypeItems}
+            />
 
-          <DatePickerField
-            label="Start Date"
-            value={startDate}
-            onChange={setStartDate}
-          />
+            <DatePickerField
+              label="Start Date"
+              value={startDate}
+              onChange={setStartDate}
+            />
 
-          <IngredientInput
-            label="Ingredients"
-            ingredients={ingredients}
-            onAddIngredient={handleAddIngredient}
-            onChangeIngredient={handleChangeIngredient}
-            onRemoveIngredient={handleRemoveIngredient}
-          />
+            <IngredientInput
+              label="Ingredients"
+              ingredients={ingredients}
+              onAddIngredient={handleAddIngredient}
+              onChangeIngredient={handleChangeIngredient}
+              onRemoveIngredient={handleRemoveIngredient}
+            />
 
-          <FormInput
-            label="Temperature (°F) - Optional"
-            value={temperature}
-            onChangeText={setTemperature}
-            placeholder="Enter temperature"
-            keyboardType="numeric"
-          />
+            <FormInput
+              label="Temperature (°F) - Optional"
+              value={temperature}
+              onChangeText={setTemperature}
+              placeholder="Enter temperature"
+              keyboardType="numeric"
+            />
 
-          <FormInput
-            label="pH Level - Optional"
-            value={ph}
-            onChangeText={setPh}
-            placeholder="Enter pH level"
-            keyboardType="numeric"
-          />
+            <FormInput
+              label="pH Level - Optional"
+              value={ph}
+              onChangeText={setPh}
+              placeholder="Enter pH level"
+              keyboardType="numeric"
+            />
 
-          <FormInput
-            label="Notes"
-            value={notes}
-            onChangeText={setNotes}
-            placeholder="Enter notes about your ferment"
-            multiline={true}
-            numberOfLines={4}
-          />
+            <FormInput
+              label="Notes"
+              value={notes}
+              onChangeText={setNotes}
+              placeholder="Enter notes about your ferment"
+              multiline={true}
+              numberOfLines={4}
+            />
 
-          <SubmitButton 
-            title="Create Ferment" 
-            onPress={handleSubmit}
-          />
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+            <SubmitButton 
+              title="Create Ferment" 
+              onPress={handleSubmit}
+            />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
