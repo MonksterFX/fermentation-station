@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import * as Crypto from 'expo-crypto';
 import { mockFerments } from '@/constants/MockData';
 import { Ferment, FermentStatus, Reminder } from '@/constants/Ferment';
 
@@ -36,10 +37,14 @@ export function FermentsProvider({ children }: { children: ReactNode }) {
   };
 
   const addReminder = (fermentId: string, reminder: Omit<Reminder, 'id'>) => {
+    // Generate a UUID using Expo Crypto
+    const uuid = Crypto.randomUUID();
+    
     const newReminder = {
       ...reminder,
-      id: Date.now().toString(),
+      id: uuid,
     };
+    
     setFerments((prev) =>
       prev.map((ferment) =>
         ferment.id === fermentId

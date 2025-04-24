@@ -126,7 +126,7 @@ export default function FermentDetailScreen() {
         },
         { 
           text: "Start", 
-          onPress: () => {
+          onPress: async () => {
             // Update the ferment status to UNSTABLE
             const now = new Date();
             updateFerment(ferment.id, { 
@@ -137,10 +137,12 @@ export default function FermentDetailScreen() {
             // Schedule reminders based on fermentation type using the hook
             const reminders = createRemindersForFerment(ferment);
             
-            // Add the reminders to the ferment
-            reminders.forEach(reminder => {
+            // Process each reminder sequentially to guarantee unique IDs
+            for (const reminder of reminders) {
+              // Add small delay to ensure unique crypto-based UUIDs
+              await new Promise(resolve => setTimeout(resolve, 10));
               addReminder(ferment.id, reminder);
-            });
+            }
             
             // Refresh the query to show updated data
             queryClient.invalidateQueries({ queryKey: ['ferment', id] });
@@ -336,7 +338,10 @@ export default function FermentDetailScreen() {
         </View>
 
         {/* Action Buttons */}
-        <View style={styles.actionsContainer}>
+        <View 
+          style={styles.actionsContainer}
+          key={`action-buttons-${ferment.id}`}
+        >
           <ActionButton
             icon="square.and.pencil"
             title="Edit"

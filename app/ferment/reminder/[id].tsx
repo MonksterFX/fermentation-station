@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
+import * as Notifications from 'expo-notifications';
 
 import { useFerments } from '@/hooks/useFerments';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -111,20 +112,32 @@ export default function AddReminderScreen() {
   };
 
   const schedulePushNotification = async (title: string, body: string, date: Date) => {
-    // This is where we would normally integrate with Expo Notifications
-    // For demonstration, we'll just show what would happen
-    console.log(`Scheduling notification: "${title}" for ${date.toLocaleString()}`);
-    
-    // In a real implementation:
-    // const identifier = await Notifications.scheduleNotificationAsync({
-    //   content: {
-    //     title: title,
-    //     body: body || `Reminder for ${ferment.name}`,
-    //     data: { fermentId: ferment.id }
-    //   },
-    //   trigger: { date },
-    // });
-    // return identifier;
+    try {
+      // Request permission first
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission required', 'You need to grant notification permissions to set reminders');
+        return;
+      }
+      
+      // Calculate the trigger date (seconds from now until the target date)
+      const trigger = date.getTime() - Date.now();
+      
+      // Schedule the notification
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: title,
+          body: body,
+          data: { fermentId: ferment.id },
+        },
+        trigger: { seconds: Math.max(1, Math.floor(trigger / 1000)) },
+      });
+      
+      Alert.alert('Reminder set', `Reminder "${title}" scheduled for ${date.toLocaleString()}`);
+    } catch (error) {
+      console.error('Failed to schedule notification:', error);
+      Alert.alert('Error', 'Failed to schedule the notification');
+    }
   };
 
   const intervalItems = [
