@@ -216,20 +216,6 @@ export default function FermentDetailScreen() {
           )}
         </View>
 
-        {/* Ingredients Section */}
-        <View style={[styles.section, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}>
-          <Text style={[styles.sectionTitle, { color: Colors[colorScheme ?? 'light'].text }]}>Ingredients</Text>
-          
-          {ferment.ingredients.map((ingredient, index) => (
-            <View key={index} style={styles.ingredientItem}>
-              <IconSymbol name="circle.fill" size={8} color={Colors[colorScheme ?? 'light'].tint} />
-              <Text style={[styles.ingredientText, { color: Colors[colorScheme ?? 'light'].text }]}>
-                {ingredient}
-              </Text>
-            </View>
-          ))}
-        </View>
-
         {/* Notes Section */}
         {ferment.notes && (
           <View style={[styles.section, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}>
@@ -423,14 +409,6 @@ const styles = StyleSheet.create({
   },
   detailValue: {
     flex: 1,
-  },
-  ingredientItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  ingredientText: {
-    marginLeft: 8,
   },
   notesText: {
     lineHeight: 22,

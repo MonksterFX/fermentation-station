@@ -11,7 +11,6 @@ import { Colors } from '@/constants/Colors';
 import { FormInput } from '@/components/ui/FormInput';
 import { FormPicker } from '@/components/ui/FormPicker';
 import { DatePickerField } from '@/components/ui/DatePickerField';
-import { IngredientInput } from '@/components/ui/IngredientInput';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 
 export default function EditFermentScreen() {
@@ -28,7 +27,6 @@ export default function EditFermentScreen() {
   const [name, setName] = useState('');
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [ingredients, setIngredients] = useState<string[]>(['']);
   const [notes, setNotes] = useState('');
   const [temperature, setTemperature] = useState('');
   const [ph, setPh] = useState('');
@@ -40,7 +38,6 @@ export default function EditFermentScreen() {
       setName(ferment.name);
       setStartDate(ferment.startDate);
       setEndDate(ferment.endDate || null);
-      setIngredients(ferment.ingredients.length > 0 ? ferment.ingredients : ['']);
       setNotes(ferment.notes);
       setTemperature(ferment.temperature ? ferment.temperature.toString() : '');
       setPh(ferment.ph ? ferment.ph.toString() : '');
@@ -66,37 +63,16 @@ export default function EditFermentScreen() {
     );
   }
 
-  const handleAddIngredient = () => {
-    setIngredients([...ingredients, '']);
-  };
-
-  const handleChangeIngredient = (text: string, index: number) => {
-    const newIngredients = [...ingredients];
-    newIngredients[index] = text;
-    setIngredients(newIngredients);
-  };
-
-  const handleRemoveIngredient = (index: number) => {
-    if (ingredients.length > 1) {
-      const newIngredients = [...ingredients];
-      newIngredients.splice(index, 1);
-      setIngredients(newIngredients);
-    }
-  };
-
   const handleSubmit = () => {
     if (!name) {
       Alert.alert('Error', 'Please enter a name for your ferment');
       return;
     }
 
-    const filteredIngredients = ingredients.filter((ingredient) => ingredient.trim() !== '');
-
     const updatedFerment = {
       name,
       startDate,
       endDate: endDate || undefined,
-      ingredients: filteredIngredients,
       notes,
       status,
       temperature: temperature ? parseFloat(temperature) : undefined,
@@ -157,14 +133,6 @@ export default function EditFermentScreen() {
               </Text>
             </TouchableOpacity>
           )}
-
-          <IngredientInput
-            label="Ingredients"
-            ingredients={ingredients}
-            onChangeIngredient={handleChangeIngredient}
-            onAddIngredient={handleAddIngredient}
-            onRemoveIngredient={handleRemoveIngredient}
-          />
 
           <FormInput
             label="Temperature (°F)"

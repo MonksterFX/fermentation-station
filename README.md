@@ -49,7 +49,7 @@ In the output, you'll find options to open the app in a:
 - `app/` - Main application code using file-based routing
 - `components/` - Reusable UI components
 - `hooks/` - Custom React hooks including data management
-- `constants/` - Type definitions and application constants
+- `constants/` - Type defons and application constants
 - `assets/` - Static assets like images and fonts
 
 ## Future Enhancements

@@ -261,14 +261,6 @@ export default function HomeScreen() {
                         Started: {formatDate(ferment.startDate)}
                       </Text>
                     </View>
-                    {ferment.ingredients.length > 0 && (
-                      <View style={styles.metaItem}>
-                        <IconSymbol name="list.bullet" size={14} color={Colors[colorScheme ?? 'light'].icon} />
-                        <Text style={[styles.metaText, { color: Colors[colorScheme ?? 'light'].icon }]}>
-                          {ferment.ingredients.length} ingredients
-                        </Text>
-                      </View>
-                    )}
                   </View>
                 </TouchableOpacity>
               ))}

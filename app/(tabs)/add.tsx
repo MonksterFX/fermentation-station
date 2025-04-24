@@ -18,7 +18,6 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { FormInput } from '@/components/ui/FormInput';
 import { DatePickerField } from '@/components/ui/DatePickerField';
-import { IngredientInput } from '@/components/ui/IngredientInput';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 
 export default function AddFermentScreen() {
@@ -26,28 +25,9 @@ export default function AddFermentScreen() {
   const colorScheme = useColorScheme();
   const [name, setName] = useState('');
   const [startDate, setStartDate] = useState(new Date());
-  const [ingredients, setIngredients] = useState<string[]>(['']);
   const [notes, setNotes] = useState('');
   const [temperature, setTemperature] = useState('');
   const [ph, setPh] = useState('');
-
-  const handleAddIngredient = () => {
-    setIngredients([...ingredients, '']);
-  };
-
-  const handleChangeIngredient = (text: string, index: number) => {
-    const newIngredients = [...ingredients];
-    newIngredients[index] = text;
-    setIngredients(newIngredients);
-  };
-
-  const handleRemoveIngredient = (index: number) => {
-    if (ingredients.length > 1) {
-      const newIngredients = [...ingredients];
-      newIngredients.splice(index, 1);
-      setIngredients(newIngredients);
-    }
-  };
 
   const handleSubmit = () => {
     if (!name) {
@@ -55,12 +35,9 @@ export default function AddFermentScreen() {
       return;
     }
 
-    const filteredIngredients = ingredients.filter((ingredient) => ingredient.trim() !== '');
-
     const newFerment = {
       name,
       startDate,
-      ingredients: filteredIngredients,
       notes,
       status: FermentStatus.PLANNED,
       temperature: temperature ? parseFloat(temperature) : undefined,
@@ -102,14 +79,6 @@ export default function AddFermentScreen() {
               label="Start Date"
               value={startDate}
               onChange={setStartDate}
-            />
-
-            <IngredientInput
-              label="Ingredients"
-              ingredients={ingredients}
-              onAddIngredient={handleAddIngredient}
-              onChangeIngredient={handleChangeIngredient}
-              onRemoveIngredient={handleRemoveIngredient}
             />
 
             <FormInput

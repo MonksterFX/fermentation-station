@@ -3,7 +3,6 @@ export interface Ferment {
   name: string;
   startDate: Date;
   endDate?: Date;
-  ingredients: string[];
   notes: string;
   status: FermentStatus;
   temperature?: number;
