@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { 
+  View, 
+  StyleSheet, 
+  Text, 
+  ScrollView, 
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
+  Switch
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
@@ -10,14 +20,22 @@ import { Colors } from '@/constants/Colors';
 import { FormInput } from '@/components/ui/FormInput';
 import { DatePickerField } from '@/components/ui/DatePickerField';
 import { SubmitButton } from '@/components/ui/SubmitButton';
+import { FormPicker } from '@/components/ui/FormPicker';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+
+type IntervalUnit = 'minutes' | 'hours' | 'days' | 'weeks';
 
 export default function AddReminderScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { getFermentById, addReminder } = useFerments();
   const colorScheme = useColorScheme();
   
-  const [reminderText, setReminderText] = useState('');
-  const [reminderDate, setReminderDate] = useState(new Date());
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [useInterval, setUseInterval] = useState(true);
+  const [intervalAmount, setIntervalAmount] = useState('1');
+  const [intervalUnit, setIntervalUnit] = useState<IntervalUnit>('days');
+  const [specificDate, setSpecificDate] = useState(new Date());
 
   // Using TanStack Query to fetch and cache the ferment data
   const { data: ferment, isLoading, error } = useQuery({
@@ -43,21 +61,78 @@ export default function AddReminderScreen() {
     );
   }
 
+  const calculateReminderDate = (): Date => {
+    if (!useInterval) {
+      return specificDate;
+    }
+
+    const interval = parseInt(intervalAmount) || 1;
+    const startDate = new Date(ferment.startDate);
+    const reminderDate = new Date(startDate);
+
+    switch (intervalUnit) {
+      case 'minutes':
+        reminderDate.setMinutes(startDate.getMinutes() + interval);
+        break;
+      case 'hours':
+        reminderDate.setHours(startDate.getHours() + interval);
+        break;
+      case 'days':
+        reminderDate.setDate(startDate.getDate() + interval);
+        break;
+      case 'weeks':
+        reminderDate.setDate(startDate.getDate() + (interval * 7));
+        break;
+    }
+
+    return reminderDate;
+  };
+
   const handleSubmit = () => {
-    if (!reminderText.trim()) {
-      Alert.alert('Error', 'Please enter a reminder');
+    if (!title.trim()) {
+      Alert.alert('Error', 'Please enter a reminder title');
       return;
     }
 
+    const reminderDate = calculateReminderDate();
+
+    // Schedule local notification
+    schedulePushNotification(title, description, reminderDate);
+
     const newReminder = {
+      title: title,
       date: reminderDate,
-      text: reminderText,
+      text: description,
       completed: false,
     };
 
     addReminder(ferment.id, newReminder);
     router.back();
   };
+
+  const schedulePushNotification = async (title: string, body: string, date: Date) => {
+    // This is where we would normally integrate with Expo Notifications
+    // For demonstration, we'll just show what would happen
+    console.log(`Scheduling notification: "${title}" for ${date.toLocaleString()}`);
+    
+    // In a real implementation:
+    // const identifier = await Notifications.scheduleNotificationAsync({
+    //   content: {
+    //     title: title,
+    //     body: body || `Reminder for ${ferment.name}`,
+    //     data: { fermentId: ferment.id }
+    //   },
+    //   trigger: { date },
+    // });
+    // return identifier;
+  };
+
+  const intervalItems = [
+    { label: 'Minutes', value: 'minutes' },
+    { label: 'Hours', value: 'hours' },
+    { label: 'Days', value: 'days' },
+    { label: 'Weeks', value: 'weeks' },
+  ];
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -72,21 +147,121 @@ export default function AddReminderScreen() {
           </Text>
 
           <FormInput
-            label="Reminder"
-            value={reminderText}
-            onChangeText={setReminderText}
-            placeholder="What needs to be done?"
-            multiline
+            label="Title"
+            value={title}
+            onChangeText={setTitle}
+            placeholder="Enter reminder title"
           />
 
-          <DatePickerField
-            label="Date"
-            value={reminderDate}
-            onChange={setReminderDate}
+          <FormInput
+            label="Description (Optional)"
+            value={description}
+            onChangeText={setDescription}
+            placeholder="Add more details about this reminder"
+            multiline
+            numberOfLines={3}
           />
+
+          <View style={styles.reminderTypeContainer}>
+            <Text style={[styles.reminderTypeLabel, { color: Colors[colorScheme ?? 'light'].text }]}>
+              Reminder Type
+            </Text>
+            
+            <View style={styles.reminderTypeOptions}>
+              <TouchableOpacity 
+                style={[
+                  styles.reminderTypeOption,
+                  useInterval && styles.selectedReminderType,
+                  { borderColor: Colors[colorScheme ?? 'light'].tint }
+                ]}
+                onPress={() => setUseInterval(true)}
+              >
+                <IconSymbol 
+                  name="timer" 
+                  size={18} 
+                  color={useInterval ? Colors[colorScheme ?? 'light'].tint : Colors[colorScheme ?? 'light'].text} 
+                />
+                <Text 
+                  style={[
+                    styles.reminderTypeText,
+                    { color: useInterval ? Colors[colorScheme ?? 'light'].tint : Colors[colorScheme ?? 'light'].text }
+                  ]}
+                >
+                  Interval
+                </Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[
+                  styles.reminderTypeOption,
+                  !useInterval && styles.selectedReminderType,
+                  { borderColor: Colors[colorScheme ?? 'light'].tint }
+                ]}
+                onPress={() => setUseInterval(false)}
+              >
+                <IconSymbol 
+                  name="calendar" 
+                  size={18} 
+                  color={!useInterval ? Colors[colorScheme ?? 'light'].tint : Colors[colorScheme ?? 'light'].text} 
+                />
+                <Text 
+                  style={[
+                    styles.reminderTypeText,
+                    { color: !useInterval ? Colors[colorScheme ?? 'light'].tint : Colors[colorScheme ?? 'light'].text }
+                  ]}
+                >
+                  Specific Date
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {useInterval ? (
+            <View style={styles.intervalContainer}>
+              <Text style={[styles.intervalLabel, { color: Colors[colorScheme ?? 'light'].text }]}>
+                Remind me after:
+              </Text>
+              
+              <View style={styles.intervalInputs}>
+                <View style={styles.amountInput}>
+                  <FormInput
+                    label=""
+                    value={intervalAmount}
+                    onChangeText={setIntervalAmount}
+                    keyboardType="numeric"
+                    placeholder="1"
+                  />
+                </View>
+                
+                <View style={styles.unitInput}>
+                  <FormPicker
+                    label=""
+                    selectedValue={intervalUnit}
+                    onValueChange={(value) => setIntervalUnit(value as IntervalUnit)}
+                    items={intervalItems}
+                  />
+                </View>
+              </View>
+              
+              <View style={styles.timePreview}>
+                <Text style={[styles.previewLabel, { color: Colors[colorScheme ?? 'light'].icon }]}>
+                  Your reminder will be set for:
+                </Text>
+                <Text style={[styles.previewValue, { color: Colors[colorScheme ?? 'light'].text }]}>
+                  {calculateReminderDate().toLocaleString()}
+                </Text>
+              </View>
+            </View>
+          ) : (
+            <DatePickerField
+              label="Reminder Date and Time"
+              value={specificDate}
+              onChange={setSpecificDate}
+            />
+          )}
 
           <View style={styles.buttonContainer}>
-            <SubmitButton title="Add Reminder" onPress={handleSubmit} />
+            <SubmitButton title="Set Reminder" onPress={handleSubmit} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -114,5 +289,65 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginVertical: 24,
+  },
+  reminderTypeContainer: {
+    marginBottom: 20,
+  },
+  reminderTypeLabel: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 8,
+  },
+  reminderTypeOptions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  reminderTypeOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 8,
+    width: '48%',
+  },
+  selectedReminderType: {
+    backgroundColor: 'rgba(10, 126, 164, 0.1)',
+  },
+  reminderTypeText: {
+    marginLeft: 8,
+    fontWeight: '500',
+  },
+  intervalContainer: {
+    marginBottom: 20,
+  },
+  intervalLabel: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 8,
+  },
+  intervalInputs: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  amountInput: {
+    width: '30%',
+  },
+  unitInput: {
+    width: '65%',
+  },
+  timePreview: {
+    marginTop: 16,
+    padding: 12,
+    borderRadius: 8,
+    backgroundColor: 'rgba(0,0,0,0.05)',
+  },
+  previewLabel: {
+    fontSize: 12,
+    marginBottom: 4,
+  },
+  previewValue: {
+    fontSize: 16,
+    fontWeight: '500',
   },
 }); 

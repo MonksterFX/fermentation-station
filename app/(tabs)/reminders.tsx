@@ -25,6 +25,7 @@ export default function RemindersScreen() {
     return [...acc, ...fermentReminders];
   }, [] as Array<{
     id: string;
+    title?: string;
     date: Date;
     text: string;
     completed: boolean;
@@ -145,8 +146,20 @@ export default function RemindersScreen() {
                     item.completed && styles.completedText,
                   ]}
                 >
-                  {item.text}
+                  {item.title || item.text}
                 </Text>
+
+                {item.title && (
+                  <Text
+                    style={[
+                      styles.reminderDescription,
+                      { color: Colors[colorScheme ?? 'light'].text },
+                      item.completed && styles.completedText,
+                    ]}
+                  >
+                    {item.text}
+                  </Text>
+                )}
 
                 <View style={styles.fermentInfo}>
                   <IconSymbol
@@ -262,6 +275,10 @@ const styles = StyleSheet.create({
   },
   reminderText: {
     fontSize: 16,
+    marginBottom: 12,
+  },
+  reminderDescription: {
+    fontSize: 14,
     marginBottom: 12,
   },
   fermentInfo: {

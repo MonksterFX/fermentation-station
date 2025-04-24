@@ -35,6 +35,7 @@ export enum FermentStatus {
 
 export interface Reminder {
   id: string;
+  title?: string;
   date: Date;
   text: string;
   completed: boolean;

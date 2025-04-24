@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useFerments } from '@/hooks/useFerments';
-import { FermentStatus, FermentType } from '@/constants/Ferment';
+import { useReminderScheduling } from '@/hooks/useReminderScheduling';
+import { FermentStatus, FermentType, Ferment, Reminder } from '@/constants/Ferment';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
@@ -12,9 +13,11 @@ import { ActionButton } from '@/components/ui/ActionButton';
 
 export default function FermentDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { getFermentById, updateFerment, deleteFerment, toggleReminder } = useFerments();
+  const { getFermentById, updateFerment, deleteFerment, toggleReminder, addReminder } = useFerments();
+  const { createRemindersForFerment } = useReminderScheduling();
   const colorScheme = useColorScheme();
   const [isEditing, setIsEditing] = useState(false);
+  const queryClient = useQueryClient();
 
   // Using TanStack Query to fetch and cache the ferment data
   const { data: ferment, isLoading, error } = useQuery({
@@ -109,6 +112,42 @@ export default function FermentDetailScreen() {
 
   const handleToggleReminder = (reminderId: string) => {
     toggleReminder(ferment.id, reminderId);
+  };
+
+  const handleStartFermentation = () => {
+    // Confirm with the user before starting the fermentation process
+    Alert.alert(
+      "Start Fermentation",
+      "Are you sure you want to start this fermentation process? This will change the status to 'Unstable' and schedule reminders based on the fermentation type.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        { 
+          text: "Start", 
+          onPress: () => {
+            // Update the ferment status to UNSTABLE
+            const now = new Date();
+            updateFerment(ferment.id, { 
+              status: FermentStatus.UNSTABLE,
+              startDate: now
+            });
+            
+            // Schedule reminders based on fermentation type using the hook
+            const reminders = createRemindersForFerment(ferment);
+            
+            // Add the reminders to the ferment
+            reminders.forEach(reminder => {
+              addReminder(ferment.id, reminder);
+            });
+            
+            // Refresh the query to show updated data
+            queryClient.invalidateQueries({ queryKey: ['ferment', id] });
+          }
+        }
+      ]
+    );
   };
 
   return (
@@ -230,14 +269,42 @@ export default function FermentDetailScreen() {
                       }
                     ]}
                   >
-                    {reminder.text}
+                    {reminder.title || reminder.text}
                   </Text>
+                  
+                  {reminder.title && (
+                    <Text 
+                      style={[
+                        styles.reminderDescription, 
+                        { 
+                          color: Colors[colorScheme ?? 'light'].text,
+                          textDecorationLine: reminder.completed ? 'line-through' : 'none' 
+                        }
+                      ]}
+                    >
+                      {reminder.text}
+                    </Text>
+                  )}
+                  
                   <Text style={[styles.reminderDate, { color: Colors[colorScheme ?? 'light'].text }]}>
                     {formatDate(reminder.date)}
                   </Text>
                 </View>
               </TouchableOpacity>
             ))}
+          </View>
+        )}
+
+        {/* Start Fermentation Button - Only show for PLANNED ferments */}
+        {ferment.status === FermentStatus.PLANNED && (
+          <View style={[styles.section, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}>
+            <TouchableOpacity
+              style={styles.startButton}
+              onPress={handleStartFermentation}
+            >
+              <IconSymbol name="play.fill" size={20} color="white" />
+              <Text style={styles.startButtonText}>Start Fermentation</Text>
+            </TouchableOpacity>
           </View>
         )}
 
@@ -381,6 +448,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 2,
   },
+  reminderDescription: {
+    fontSize: 12,
+  },
   reminderDate: {
     fontSize: 12,
   },
@@ -402,5 +472,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 16,
     marginBottom: 24,
+  },
+  startButton: {
+    backgroundColor: '#4CAF50',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    borderRadius: 12,
+  },
+  startButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
   },
 }); 
